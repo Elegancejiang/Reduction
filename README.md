@@ -7,37 +7,14 @@
 This program aims to implement and optimize parallel reduction operations in CUDA.  It is based on NVIDIA's PPT "Optimizing Parallel Reduction in CUDA" and fully implements the five-step optimization strategy proposed in the document.  After each optimization step, we verify the correctness of the optimized results by comparing them with the original reduction results.  On the NVIDIA GeForce RTX 4090 and NVIDIA GeForce RTX 3060 Laptop platforms, we tested the execution time of the program after each optimization step and compared it with the reduction summation functions of the Thrust and CUB libraries.  The test results show that the reduction operation after the five-step optimization is slightly faster than thrust::reduce function.
 
 ## Installation
-#### Step 1 : Assert "make" is available.
-"make" is an automatic build tool, it is required to build PanguLU. "make" is available in most GNU/Linux. You can install it using package managers like `apt` or `yum`.
+#### Step 1 : Assert NVIDIA GPU and CUDA is available
+To execute the Reduction program, verify that your system is equipped with an NVIDIA GPU and has the CUDA installed.
 
-#### Step 2 : Assert MPI library is available.
-PanguLU requires MPI library. you need to install MPI library with header files. Tested MPI libraries : OpenMPI 4.1.2, Intel MPI 2021.12.
+#### Step 2: Verify Your GPU's Compute Capability
+The `nvcc` compilation command in the Makefile requires the compute capability of your GPU device (device 0). If you are unsure about the compute capability of your GPU device (device 0), you can run the script `GPU_information.sh` (execute the command `sh GPU_information.sh` in the terminal) to obtain this information.
 
-#### Step 3 : Assert CUDA is available. (optimal, required if GPU is used)
-If GPUs are used, CUDA is required. Tested version : CUDA 12.2.
-
-#### Step 4 : Assert BLAS library is available. (optimal, required if GPU is not used)
-A BLAS library is required if CPU takes part in algebra computing of numeric factorization. Tested version : OpenBLAS 0.3.26.
-
-#### Step 5 : Assert METIS is available. (optimal but recommended)
-The github page of METIS library is : https://github.com/KarypisLab/METIS
-
-#### Step 6 : Edit `make.inc`.
-Search `/path/to` in `make.inc`. Replace them to the path actually on your computer.
-
-#### Step 7 : Edit `examples/Makefile`
-The Makefile of example code doesn't include `make.inc`. Search `/path/to` in `examples/Makefile`. Replace them to the path actually on your computer.
-
-#### Step 8 : Decide if you want to use GPU.
-If you want to use GPU, you should : 
- - Append `GPU_CUDA` in build_list.csv;
- - Add `-DGPU_OPEN` in `PANGULU_FLAGS`. You can find `PANGULU_FLAGS` in `make.inc`;
- - Uncomment `LINK_CUDA` in `examples/Makefile`.
-
-Vise versa.
-
-#### Step 9 : Run `make -j` in your terminal.
-Make sure the working directory of your terminal is the root directory of PanguLU. If PanguLU was successfully built, you will find `libpangulu.a` and `libpangulu.so` in `lib` directory, and `pangulu_example.elf` in `exampls` directory.
+#### Step 3: Confirm the Correct Makefile Settings
+You can replace `arch=compute_86,code=sm_86` in the compilation command of the Makefile with the compute capability of your GPU device (device 0). Once this is done, you can proceed to execute the Makefile to compile the Reduction program.
 
 ## Build flags
 `PANGULU_FLAGS` influences build behaviors. You can edit `PANGULU_FLAGS` in `make.inc` to implement different features of PanguLU. Here are available flags :
