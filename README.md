@@ -61,58 +61,6 @@ Please select zero or one of these flags : `-DPANGULU_LOG_INFO`, `-DPANGULU_LOG_
 Hyper-threading is not recommended. If you can't turn off the hyper-threading and each core of your CPU has 2 threads, using `-DHT_IS_OPEN`
 may reaps performance gain.
 
-## Function interfaces
-To make it easier to call PanguLU in your software, PanguLU provides the following function interfaces:
-
-#### 1. pangulu_init()
-```
-void pangulu_init(
-  int pangulu_n, // Specifies the number of rows in the CSR format matrix.
-  long long pangulu_nnz, // Specifies the total number of non-zero elements in the CSR format matrix.
-  long *csr_rowptr, // Points to an array that stores pointers to rows of the CSR format matrix.
-  int *csr_colidx, // Points to an array that stores indices to columns of the CSR format matrix.
-  pangulu_calculate_type *csr_value, // Points to an array that stores the values of the CSR format matrix.
-  pangulu_init_options *init_options, // Pointer to a pangulu_init_options structure.
-  void **pangulu_handle // On return, contains a handle pointer to the library’s internal state.
-);
-```
-
-#### 2. pangulu_gstrf()
-```
-void pangulu_gstrf(
-  pangulu_gstrf_options *gstrf_options, // Pointer to pangulu_gstrf_options structure.
-  void **pangulu_handle // Pointer to the solver handle returned on initialization.
-);
-```
-
-#### 3. pangulu_gstrs()
-```
-void pangulu_gstrs(
-  pangulu_calculate_type *rhs, // Pointer to the right-hand side vector.
-  pangulu_gstrs_options *gstrs_options, // Pointer to the pangulu_gstrs_options structure.
-  void** pangulu_handle // Pointer to the library internal state handle returned on initialization.
-);
-```
-
-#### 4. pangulu_gssv()
-```
-void pangulu_gssv(
-  pangulu_calculate_type *rhs, // Pointer to the right-hand side vector.
-  pangulu_gstrf_options *gstrf_options, // Pointer to a pangulu_gstrf_options structure.
-  pangulu_gstrs_options *gstrs_options, // Pointer to a pangulu_gstrs_options structure.
-  void **pangulu_handle // Pointer to the library internal status handle returned on initialization.
-);
-```
-
-#### 5. pangulu_finalize()
-```
-void pangulu_finalize(
-  void **pangulu_handle // Pointer to the library internal state handle returned on initialization.
-);
-```
-
-`example.c` is a sample program to call PanguLU. You can refer to this file to complete the call to PanguLU. You should first create the distributed matrix using `pangulu_init()`. If you need to solve multiple right-hand side vectors while the matrix is unchanged, you can call `pangulu_gstrs()` multiple times after calling `pangulu_gstrf()`. If you need to factorize a number of different matrices, call `pangulu_finalize()` after completing the solution of one matrix, and then use `pangulu_init()` to to initialize the next matrix.
-
 ## Executing the example code of PanguLU
 The test routines are placed in the `examples` directory. The routine in `examples/example.c` firstly call `pangulu_gstrf()` to perform LU factorization, and then call `pangulu_gstrs()` to solve linear equation.
 #### run command
@@ -141,40 +89,6 @@ In this example, 6 processes are used to test, the block_size is 4, matrix name 
 
 
 ## Release versions
-
-#### <p align='left'>Version 4.1.0 (Sep. 1, 2024) </p>
-
-* Optimized memory usage of numeric factorisation and solving;
-* Added parallel building support.
-
-#### <p align='left'>Version 4.0.0 (Jul. 24, 2024) </p>
-
-* Optimized user interfaces of solver routines;
-* Optimized performamce of numeric factorisation phase on CPU platform;
-* Added support on complex matrix solving;
-* Optimized preprocessing performance;
-
-#### <p align='left'>Version 3.5.0 (Aug. 06, 2023) </p>
-
-* Updated the pre-processing phase with OpenMP.
-* Updated the compilation method of PanguLU, compile libpangulu.so and libpangulu.a at the same time.
-* Updated timing for the reorder phase, the symbolic factorisation phase, the pre-processing phase.
-* Added GFLOPS for the numeric factorisation phase.
- 
-#### <p align='left'>Version 3.0.0 (Apr. 02, 2023) </p>
-
-* Used adaptive selection sparse BLAS in the numeric factorisation phase.
-* Added the reorder phase.
-* Added the symbolic factorisation phase. 
-* Added mc64 sorting algorithm in the reorder phase.
-* Added interface for 64-bit metis package in the reorder phase.
-
-
-#### <p align='left'> Version 2.0.0 (Jul. &thinsp;22, 2022) </p>
-
-* Used a synchronisation-free scheduling strategy in the numeric factorisation phase.
-* Updated the MPI communication method in the numeric factorisation phase.
-* Added single precision in the numeric factorisation phase.
 
 #### <p align='left'>Version 1.0.0 (Oct. 19, 2021) </p>
 
