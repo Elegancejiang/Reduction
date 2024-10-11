@@ -1,0 +1,1 @@
+./reduction 1073741824 > reduction_test.txt
